@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <queue>
 #include <utility>
+#include <tuple>
+#include <list>
 using namespace std;
 
 pair<int, int> operator+(const pair<int, int>& left, const pair<int, int>& right)
@@ -367,5 +369,254 @@ void BaekJoon::Quest_3055()
 		}
 	}
 	cout << "KAKTUS";
+}
+
+void BaekJoon::Quest_6593()
+{
+	enum MapStatus
+	{
+		empty = '.',
+		block = '#',
+		start = 'S',
+		end = 'E',
+	};
+	while (true)
+	{
+		int l, r, c;
+		cin >> l >> r >> c;
+		if (l == 0 && r == 0 && c == 0)
+			break;
+		tuple<int, int, int> endpos;
+		vector<vector<vector<bool>>> visited(l, vector<vector<bool>>(r, vector<bool>(c, false)));
+		queue<tuple<int, int, int>> q;
+		for (int z = 0; z < l; ++z)
+		{
+			for (int y = 0; y < r; ++y)
+			{
+				for (int x = 0; x < c; ++x)
+				{
+					char tmp;
+					cin >> tmp;
+
+					switch (tmp)
+					{
+					case MapStatus::empty: // 빈공간
+						visited[z][y][x] = false;
+						break;
+					case MapStatus::start: // 시작지점 -> 방문처리 & 시작지점 추가
+						q.push(make_tuple(z, y, x));
+					case MapStatus::block: // 막힘 -> 방뭉처리하여 가지못하도록 함
+						visited[z][y][x] = true;
+						break;
+					case MapStatus::end: // 끝지점
+						endpos = make_tuple(z, y, x);
+						break;
+					}
+				}
+			}
+		}
+
+
+		int minute = 0; // 탈출하는데 걸리는 시간 저장
+		bool escaped = false;
+		vector<tuple<int, int, int>> ways = {
+			{0,0,1},
+			{0,1,0},
+			{1,0,0},
+			{0,0,-1},
+			{0,-1,0},
+			{-1,0,0},
+		};
+		while (!q.empty())
+		{
+			++minute;
+			int qsize = q.size();
+			for (int i = 0; i < qsize; ++i)
+			{
+				auto curpos = q.front();
+				q.pop();
+				for (int j = 0; j < ways.size(); ++j)
+				{
+					int z = get<0>(curpos) + get<0>(ways[j]),
+						y = get<1>(curpos) + get<1>(ways[j]),
+						x = get<2>(curpos) + get<2>(ways[j]);
+					if (z >= 0 && z < l
+						&& y >= 0 && y < r
+						&& x >= 0 && x < c)
+					{
+						if (endpos == make_tuple(z, y, x)) // escape
+						{
+							escaped = true;
+							break;
+						}
+						else if (!visited[z][y][x])
+						{
+							visited[z][y][x] = true; // 방문처리
+							q.push(make_tuple(z, y, x)); // 다음 탐색 기준지점 저장
+						}
+
+					}
+					if (escaped)
+						break;
+				}
+				if (escaped)
+					break;
+			}
+			if (escaped)
+				break;
+		}
+		if (escaped)
+			cout << "Escaped in " << minute << " minute(s)." << endl;
+		else
+			cout << "Trapped!" << endl;
+	}
+}
+
+void BaekJoon::Quest_1018()
+{
+	enum BoardType
+	{
+		black = false,
+		white = true
+	};
+	int n, m;
+	cin >> n >> m;
+	vector<vector<bool>> board(n, vector<bool>(m));
+	int bcnt = 0; // bcnt : 첫칸이 검은색인 경우 올바른 색의 갯수
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			char tmp;
+			cin >> tmp;
+			if (tmp == 'B' && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) // B의 경우 (짝수행 짝수열) 또는 (홀수행 홀수열)에 올수 있다.
+			{
+				++bcnt;
+			}
+			else if (tmp == 'W' && ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0))) // W의 경우 (짝수행 홀수열) 또는 (홀수행 짝수열)에 올수 있다.
+			{
+				++bcnt;
+			}
+		}
+	}
+	if (bcnt > n* m - bcnt)
+		cout << n * m - bcnt;
+	else
+		cout << bcnt;
+}
+
+void BaekJoon::Quest_2573()
+{
+	int n, m;
+	cin >> n >> m;
+	vector<vector<int>> Map(n, vector<int>(m));
+	vector<vector<bool>> visited(n, vector<bool>(m, false));
+	vector<pair<int, int>> icebergpos;
+	for (int y = 0; y < n; ++y)
+		for (int x = 0; x < m; ++x)
+		{
+			cin >> Map[y][x];
+			if (Map[y][x])	// 모든 빙산위치 순차적 저장
+			{
+				icebergpos.push_back({ y,x });
+				visited[y][x] = false;
+			}
+			else
+			{
+				visited[y][x] = true;
+			}
+		}
+
+
+	queue<pair<int, int>> q;
+	
+	
+	bool divided = false;
+	int turn = 0;
+	while (!icebergpos.empty())
+	{
+		q.push(icebergpos[0]);
+		visited[icebergpos[0].first][icebergpos[0].second] = true;
+
+		while (!q.empty())
+		{
+			// bfs
+			int qsize = q.size();
+			for (int i = 0; i < qsize; ++i)
+			{
+				pair<int, int> pos = q.front();
+				q.pop();
+				// 다음 방문지점
+				pair<int, int> movepos[4] = { {0,1},{1,0},{0,-1}, {-1,0} };
+				for (int j = 0; j < 4; ++j)
+				{
+					pair<int, int> newpos = pos + movepos[j];
+					if (0 <= newpos.first && newpos.first < n && 0 <= newpos.second && newpos.second < m
+						&& !visited[newpos.first][newpos.second])
+					{
+						visited[newpos.first][newpos.second] = true; // 방문처리
+						q.push(newpos);
+					}
+				}
+			}
+		}
+
+		//cout << "====================" << endl;
+		// 쪼개짐 확인
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; ++j)
+			{
+				//cout << Map[i][j] << visited[i][j];
+				if (!visited[i][j])
+				{
+					divided = true;
+					break;
+				}
+			}
+			//cout << endl;
+			if (divided)
+				break;
+		}
+		if (divided)
+			break;
+
+		vector<int> watercnt(icebergpos.size(), 0);
+		// 근처 바다 수 셈
+		for (int i = 0; i < icebergpos.size(); i++)
+		{
+			pair<int, int> movepos[4] = { {0,1},{1,0},{0,-1}, {-1,0} };
+			for (int j = 0; j < 4; ++j)
+			{
+				pair<int, int> newpos = icebergpos[i] + movepos[j];
+				if (0 <= newpos.first && newpos.first < n && 0 <= newpos.second && newpos.second < m
+					&& Map[newpos.first][newpos.second] == 0)
+					++watercnt[i];
+			}
+		}
+
+		// 빙하 녹음 처리
+		vector<pair<int, int>> newvector;
+		for (int i = 0; i < icebergpos.size(); i++)
+		{
+			Map[icebergpos[i].first][icebergpos[i].second] -= watercnt[i];
+			if (Map[icebergpos[i].first][icebergpos[i].second] <= 0)
+			{
+				Map[icebergpos[i].first][icebergpos[i].second] = 0;
+			}
+			else
+			{
+				visited[icebergpos[i].first][icebergpos[i].second] = false;
+				newvector.push_back(icebergpos[i]);
+			}
+		}
+		icebergpos = move(newvector);
+		++turn;
+	}
+
+	if (divided)
+		cout << turn;
+	else
+		cout << '0';
 }
 
