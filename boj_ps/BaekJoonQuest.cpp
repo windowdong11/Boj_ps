@@ -625,7 +625,7 @@ void BaekJoon::Quest_1697()
 {
 	const int min_pos = 0, max_pos = 100000; // 이동가능한 최소, 최대 위치 [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
-	vector<bool> visited(max_pos + 1, false);
+	vector<int> visited(max_pos + 1, 0);
 	int n_pos, k_pos; // n : 수빈 위치, k : 동생 위치
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
@@ -633,14 +633,11 @@ void BaekJoon::Quest_1697()
 		cout << '0';
 		return;
 	}
-	visited[n_pos] = true;
 
-	int turncnt = 0;
 	queue<int> q;
 	q.push(n_pos);
 	while (!q.empty())
 	{
-		++turncnt;
 		// bfs
 		int qsize = q.size();
 		for (int i = 0; i < qsize; ++i)
@@ -654,7 +651,7 @@ void BaekJoon::Quest_1697()
 				newpos = curpos + moveways[i];
 				if (isPosInArea(newpos) && !visited[newpos])
 				{
-					visited[newpos] = true;
+					visited[newpos] = visited[curpos] + 1;
 					if (visited[k_pos])
 						break;
 					q.push(newpos);
@@ -666,7 +663,7 @@ void BaekJoon::Quest_1697()
 		if (visited[k_pos])
 			break;
 	}
-	cout << turncnt;
+	cout << visited[k_pos];
 }
 
 void BaekJoon::Quest_12851()
@@ -715,5 +712,54 @@ void BaekJoon::Quest_12851()
 	}
 	cout << visitedturn[k_pos] << endl
 		<< wayscnt;
+}
+
+void BaekJoon::Quest_13549()
+{
+	const int min_pos = 0, max_pos = 100000; // 이동가능한 최소, 최대 위치 [0,100000]
+	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
+	vector<int> distance(max_pos + 1, max_pos + 1);
+	int n_pos, k_pos; // n : 수빈 위치, k : 동생 위치
+	cin >> n_pos >> k_pos;
+	if (n_pos == k_pos)
+	{
+		cout << '0';
+		return;
+	}
+
+	queue<int> q;
+	q.push(n_pos);
+	distance[n_pos] = 0;
+	while (!q.empty())
+	{
+		// bfs
+		int qsize = q.size();
+		for (int i = 0; i < qsize; ++i)
+		{
+			int curpos = q.front();
+			q.pop();
+			int newpos[3] = { curpos + 1, curpos - 1, curpos * 2 };
+			if (isPosInArea(newpos[2]))
+			{
+				if (distance[newpos[2]] > distance[curpos])
+				{
+					distance[newpos[2]] = distance[curpos];
+					q.push(newpos[2]);
+				}
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				if (isPosInArea(newpos[i]))
+				{
+					if (distance[newpos[i]] > distance[curpos] + 1)
+					{
+						distance[newpos[i]] = distance[curpos] + 1;
+						q.push(newpos[i]);
+					}
+				}
+			}
+		}
+	}
+	cout << distance[k_pos];
 }
 

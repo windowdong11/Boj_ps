@@ -1,6 +1,6 @@
 #pragma once
-#include <chrono>
 #include <iostream>
+#include <chrono>
 class MyTimer
 {
 private:
