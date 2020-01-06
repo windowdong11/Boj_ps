@@ -6,6 +6,7 @@
 #include <utility>
 #include <tuple>
 #include <list>
+#include "MyTimer.h"
 using namespace std;
 
 pair<int, int> operator+(const pair<int, int>& left, const pair<int, int>& right)
@@ -567,7 +568,7 @@ void BaekJoon::Quest_2573()
 		{
 			for (int j = 0; j < m; ++j)
 			{
-				//cout << Map[i][j] << visited[i][j];
+				//cout << Map[i][j] << visitedturn[i][j];
 				if (!visited[i][j])
 				{
 					divided = true;
@@ -625,7 +626,6 @@ void BaekJoon::Quest_1697()
 	const int min_pos = 0, max_pos = 100000; // 이동가능한 최소, 최대 위치 [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
 	vector<bool> visited(max_pos + 1, false);
-	//vector<int> root(max_pos + 1, 0);
 	int n_pos, k_pos; // n : 수빈 위치, k : 동생 위치
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
@@ -633,55 +633,87 @@ void BaekJoon::Quest_1697()
 		cout << '0';
 		return;
 	}
-	//root[n_pos] = -1;
 	visited[n_pos] = true;
 
 	int turncnt = 0;
 	queue<int> q;
-	auto pushNextPos = [&isPosInArea, &visited, &q/*, &root*/](int curpos) {
-		if (isPosInArea(curpos - 1) && !visited[curpos - 1])
-		{
-			q.push(curpos - 1);
-			visited[curpos - 1] = true;
-			//root[curpos - 1] = curpos;
-		}
-		if (isPosInArea(curpos + 1) && !visited[curpos + 1])
-		{
-			q.push(curpos + 1);
-			visited[curpos + 1] = true;
-			//root[curpos + 1] = curpos;
-		}
-		if (isPosInArea(curpos * 2) && !visited[curpos * 2])
-		{
-			q.push(curpos * 2);
-			visited[curpos * 2] = true;
-			//root[curpos * 2] = curpos;
-		}
-	};
 	q.push(n_pos);
 	while (!q.empty())
 	{
 		++turncnt;
-		
+		// bfs
 		int qsize = q.size();
 		for (int i = 0; i < qsize; ++i)
 		{
 			int curpos = q.front();
 			q.pop();
-			pushNextPos(curpos);
+			int newpos;
+			int moveways[3] = { 1, -1, curpos };
+			for (int i = 0; i < 3; ++i)
+			{
+				newpos = curpos + moveways[i];
+				if (isPosInArea(newpos) && !visited[newpos])
+				{
+					visited[newpos] = true;
+					if (visited[k_pos])
+						break;
+					q.push(newpos);
+				}
+			}
 			if (visited[k_pos])
 				break;
 		}
 		if (visited[k_pos])
 			break;
 	}
-	cout << turncnt;// << endl;
-	/*int pos = k_pos;
-	cout << k_pos << ' ';
-	while (pos != n_pos)
+	cout << turncnt;
+}
+
+void BaekJoon::Quest_12851()
+{
+	const int min_pos = 0, max_pos = 100000; // 이동가능한 최소, 최대 위치 [0,100000]
+	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
+	vector<int> visitedturn(max_pos + 1, 0);
+	int n_pos, k_pos; // n : 수빈 위치, k : 동생 위치
+	cin >> n_pos >> k_pos;
+	if (n_pos == k_pos)
 	{
-		pos = root[pos];
-		cout << pos << ' ';
-	}*/
+		cout << '0' << endl << '1';
+		return;
+	}
+	
+	int wayscnt = 0;
+	queue<int> q;
+	q.push(n_pos);
+	visitedturn[n_pos] = 0;
+	while (!q.empty())
+	{
+		// bfs
+		int qsize = q.size();
+		for (int i = 0; i < qsize; ++i)
+		{
+			int curpos = q.front();
+			q.pop();
+			int newpos;
+			int moveways[3] = { 1, -1, curpos };
+			for (int i = 0; i < 3; ++i)
+			{
+				newpos = curpos + moveways[i];
+				if (isPosInArea(newpos) && (visitedturn[newpos] == visitedturn[curpos] + 1 || visitedturn[newpos] == 0))
+				{
+					if(!visitedturn[newpos])
+						visitedturn[newpos] = visitedturn[curpos] + 1;
+					if (newpos == k_pos)
+						++wayscnt;
+					else
+						q.push(newpos);
+				}
+			}
+		}
+		if (visitedturn[k_pos])
+			break;
+	}
+	cout << visitedturn[k_pos] << endl
+		<< wayscnt;
 }
 

@@ -139,10 +139,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaekJoonQuest.h" />
+    <ClInclude Include="MyTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaekJoonQuest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyTimer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
