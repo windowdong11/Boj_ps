@@ -6,6 +6,7 @@
 #include <utility>
 #include <tuple>
 #include <list>
+#include <stack>
 #include "MyTimer.h"
 using namespace std;
 
@@ -761,5 +762,65 @@ void BaekJoon::Quest_13549()
 		}
 	}
 	cout << distance[k_pos];
+}
+
+void BaekJoon::Quest_13913()
+{
+	const int min_pos = 0, max_pos = 100000; // 이동가능한 최소, 최대 위치 [0,100000]
+	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
+	vector<int> visited(max_pos + 1, 0);
+	vector<int> prevnode(max_pos + 1, 0);
+	int n_pos, k_pos; // n : 수빈 위치, k : 동생 위치
+	cin >> n_pos >> k_pos;
+	if (n_pos == k_pos)
+	{
+		cout << '0' << endl
+			<< n_pos;
+		return;
+	}
+
+	queue<int> q;
+	q.push(n_pos);
+	while (!q.empty())
+	{
+		// bfs
+		int qsize = q.size();
+		for (int i = 0; i < qsize; ++i)
+		{
+			int curpos = q.front();
+			q.pop();
+			int newpos[3] = { curpos + 1, curpos - 1, curpos * 2};
+			for (int i = 0; i < 3; ++i)
+			{
+				if (isPosInArea(newpos[i]) && !visited[newpos[i]])
+				{
+					visited[newpos[i]] = visited[curpos] + 1;
+					prevnode[newpos[i]] = curpos;
+					if (visited[k_pos])
+						break;
+					q.push(newpos[i]);
+				}
+			}
+			if (visited[k_pos])
+				break;
+		}
+		if (visited[k_pos])
+			break;
+	}
+	cout << visited[k_pos] << endl;
+
+	stack<int> path;
+	int pos = k_pos;
+	while (pos != n_pos)
+	{
+		path.push(pos);
+		pos = prevnode[pos];
+	}
+	cout << pos << ' ';
+	while (!path.empty())
+	{
+		cout << path.top() << ' ';
+		path.pop();
+	}
 }
 

@@ -22,4 +22,5 @@ namespace BaekJoon
 	void Quest_1697(); // 2020-01-05 6:50 ~ 2020-01-05 9:09 : W S
 	void Quest_12851(); // 2020-01-05 11:37 ~ 2020-01-05  :
 	void Quest_13549();
+	void Quest_13913();
 }
