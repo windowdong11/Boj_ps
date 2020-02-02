@@ -339,3 +339,8 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /boj_ps/main.cpp
+/boj_ps/tc1010.txt
+/boj_ps/tc100100.txt
+/boj_ps/tc10001000.txt
+/boj_ps/tc10001.txt
+/boj_ps/result.txt

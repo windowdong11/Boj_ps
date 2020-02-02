@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <chrono>
+
 class MyTimer
 {
 private:
@@ -38,4 +39,3 @@ public:
 		status = false;
 	}
 };
-

@@ -23,4 +23,27 @@ namespace BaekJoon
 	void Quest_12851(); // 2020-01-05 11:37 ~ 2020-01-05  :
 	void Quest_13549();
 	void Quest_13913();
+	void Quest_3197();
+	void Quest_1485();
+	void Quest_10625();
+	void Quest_1103();
+	void Quest_17608();
+	void Quest_14491();
+	void Quest_14487();
+	void Quest_1051();
+	void Quest_1113();
+	void Quest_17294();
+	void Quest_17296();
+	void Quest_15922();
+	void Quest_5212();
+	void Quest_6581();
+	void Quest_16946();
+	void Quest_16933();
+	void Quest_2493();
+	void Quest_9012();
+	void Quest_1629();
+	void Quest_15649();
+	void Quest_15652();
+	void Quest_9663();
+	void Quest_9663_cheat();
 }

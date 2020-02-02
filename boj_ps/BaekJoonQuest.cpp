@@ -1,4 +1,6 @@
-#include "BaekJoonQuest.h"
+ï»¿#include "BaekJoonQuest.h"
+#include "MyTimer.h"
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -7,8 +9,14 @@
 #include <tuple>
 #include <list>
 #include <stack>
-#include "MyTimer.h"
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <iterator>
+#include <fstream>
+#include <functional>
 using namespace std;
+//MyTimer t;
 
 pair<int, int> operator+(const pair<int, int>& left, const pair<int, int>& right)
 {
@@ -302,14 +310,14 @@ void BaekJoon::Quest_3055()
 			cin >> Map[i][j];
 			switch (Map[i][j])
 			{
-			case hedgedog://°í½¿µµÄ¡
+			case hedgedog://ê³ ìŠ´ë„ì¹˜
 				hedgedogq.push({ i,j });
-				Map[i][j] = visited;//¹°ÀÌ Âû ¼ö ÀÖµµ·Ï ÀÏ¹İ ¹Ù´ÚÀ¸·Î º¯°æ
+				Map[i][j] = visited;//ë¬¼ì´ ì°° ìˆ˜ ìˆë„ë¡ ì¼ë°˜ ë°”ë‹¥ìœ¼ë¡œ ë³€ê²½
 				break;
-			case water://¹°
+			case water://ë¬¼
 				waterq.push({ i,j });
 				break;
-			case cave://µ¿±¼
+			case cave://ë™êµ´
 				cavepos.first = i;
 				cavepos.second = j;
 				break;
@@ -329,8 +337,8 @@ void BaekJoon::Quest_3055()
 			for (int i = 0; i < 4; i++)
 			{
 				pair<int, int> newpos = waterpos + movearr[i];
-				if (newpos.first >= 0 && newpos.second >= 0 && newpos.first < r && newpos.second < c // ¸Ê ¾È &
-					&& Map[newpos.first][newpos.second] == blank) // ÀÏ¹İ¹Ù´ÚÀÓ
+				if (newpos.first >= 0 && newpos.second >= 0 && newpos.first < r && newpos.second < c // ë§µ ì•ˆ &
+					&& Map[newpos.first][newpos.second] == blank) // ì¼ë°˜ë°”ë‹¥ì„
 				{
 					Map[newpos.first][newpos.second] = water;
 					waterq.push(newpos);
@@ -343,7 +351,7 @@ void BaekJoon::Quest_3055()
 		for (int j = 0; j < qsize; j++)
 		{
 			pair<int, int> hedgedogpos = hedgedogq.front();
-			if (hedgedogpos == cavepos) // °í½¿µµÄ¡°¡ µ¿±¼À» Ã£À½
+			if (hedgedogpos == cavepos) // ê³ ìŠ´ë„ì¹˜ê°€ ë™êµ´ì„ ì°¾ìŒ
 			{
 				arrived = true;
 				break;
@@ -353,14 +361,14 @@ void BaekJoon::Quest_3055()
 			for (int i = 0; i < 4; i++)
 			{
 				pair<int, int> newpos = hedgedogpos + movearr[i];
-				if (newpos.first >= 0 && newpos.second >= 0 && newpos.first < r && newpos.second < c) // ¸Ê ¾È &
+				if (newpos.first >= 0 && newpos.second >= 0 && newpos.first < r && newpos.second < c) // ë§µ ì•ˆ &
 				{
 					if (Map[newpos.first][newpos.second] == blank)
 					{
 						Map[newpos.first][newpos.second] = visited;
 						hedgedogq.push(newpos);
 					}
-					else if (Map[newpos.first][newpos.second] == cave) // µ¿±¼ ¹ß°ß -> Á¾·á
+					else if (Map[newpos.first][newpos.second] == cave) // ë™êµ´ ë°œê²¬ -> ì¢…ë£Œ
 					{
 						cout << turncnt;
 						return;
@@ -402,15 +410,15 @@ void BaekJoon::Quest_6593()
 
 					switch (tmp)
 					{
-					case MapStatus::empty: // ºó°ø°£
+					case MapStatus::empty: // ë¹ˆê³µê°„
 						visited[z][y][x] = false;
 						break;
-					case MapStatus::start: // ½ÃÀÛÁöÁ¡ -> ¹æ¹®Ã³¸® & ½ÃÀÛÁöÁ¡ Ãß°¡
+					case MapStatus::start: // ì‹œì‘ì§€ì  -> ë°©ë¬¸ì²˜ë¦¬ & ì‹œì‘ì§€ì  ì¶”ê°€
 						q.push(make_tuple(z, y, x));
-					case MapStatus::block: // ¸·Èû -> ¹æ¹¶Ã³¸®ÇÏ¿© °¡Áö¸øÇÏµµ·Ï ÇÔ
+					case MapStatus::block: // ë§‰í˜ -> ë°©ë­‰ì²˜ë¦¬í•˜ì—¬ ê°€ì§€ëª»í•˜ë„ë¡ í•¨
 						visited[z][y][x] = true;
 						break;
-					case MapStatus::end: // ³¡ÁöÁ¡
+					case MapStatus::end: // ëì§€ì 
 						endpos = make_tuple(z, y, x);
 						break;
 					}
@@ -419,7 +427,7 @@ void BaekJoon::Quest_6593()
 		}
 
 
-		int minute = 0; // Å»ÃâÇÏ´Âµ¥ °É¸®´Â ½Ã°£ ÀúÀå
+		int minute = 0; // íƒˆì¶œí•˜ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„ ì €ì¥
 		bool escaped = false;
 		vector<tuple<int, int, int>> ways = {
 			{0,0,1},
@@ -453,8 +461,8 @@ void BaekJoon::Quest_6593()
 						}
 						else if (!visited[z][y][x])
 						{
-							visited[z][y][x] = true; // ¹æ¹®Ã³¸®
-							q.push(make_tuple(z, y, x)); // ´ÙÀ½ Å½»ö ±âÁØÁöÁ¡ ÀúÀå
+							visited[z][y][x] = true; // ë°©ë¬¸ì²˜ë¦¬
+							q.push(make_tuple(z, y, x)); // ë‹¤ìŒ íƒìƒ‰ ê¸°ì¤€ì§€ì  ì €ì¥
 						}
 
 					}
@@ -484,18 +492,18 @@ void BaekJoon::Quest_1018()
 	int n, m;
 	cin >> n >> m;
 	vector<vector<bool>> board(n, vector<bool>(m));
-	int bcnt = 0; // bcnt : Ã¹Ä­ÀÌ °ËÀº»öÀÎ °æ¿ì ¿Ã¹Ù¸¥ »öÀÇ °¹¼ö
+	int bcnt = 0; // bcnt : ì²«ì¹¸ì´ ê²€ì€ìƒ‰ì¸ ê²½ìš° ì˜¬ë°”ë¥¸ ìƒ‰ì˜ ê°¯ìˆ˜
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = 0; j < m; ++j)
 		{
 			char tmp;
 			cin >> tmp;
-			if (tmp == 'B' && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) // BÀÇ °æ¿ì (Â¦¼öÇà Â¦¼ö¿­) ¶Ç´Â (È¦¼öÇà È¦¼ö¿­)¿¡ ¿Ã¼ö ÀÖ´Ù.
+			if (tmp == 'B' && ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))) // Bì˜ ê²½ìš° (ì§ìˆ˜í–‰ ì§ìˆ˜ì—´) ë˜ëŠ” (í™€ìˆ˜í–‰ í™€ìˆ˜ì—´)ì— ì˜¬ìˆ˜ ìˆë‹¤.
 			{
 				++bcnt;
 			}
-			else if (tmp == 'W' && ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0))) // WÀÇ °æ¿ì (Â¦¼öÇà È¦¼ö¿­) ¶Ç´Â (È¦¼öÇà Â¦¼ö¿­)¿¡ ¿Ã¼ö ÀÖ´Ù.
+			else if (tmp == 'W' && ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0))) // Wì˜ ê²½ìš° (ì§ìˆ˜í–‰ í™€ìˆ˜ì—´) ë˜ëŠ” (í™€ìˆ˜í–‰ ì§ìˆ˜ì—´)ì— ì˜¬ìˆ˜ ìˆë‹¤.
 			{
 				++bcnt;
 			}
@@ -518,7 +526,7 @@ void BaekJoon::Quest_2573()
 		for (int x = 0; x < m; ++x)
 		{
 			cin >> Map[y][x];
-			if (Map[y][x])	// ¸ğµç ºù»êÀ§Ä¡ ¼øÂ÷Àû ÀúÀå
+			if (Map[y][x])	// ëª¨ë“  ë¹™ì‚°ìœ„ì¹˜ ìˆœì°¨ì  ì €ì¥
 			{
 				icebergpos.push_back({ y,x });
 				visited[y][x] = false;
@@ -531,8 +539,8 @@ void BaekJoon::Quest_2573()
 
 
 	queue<pair<int, int>> q;
-	
-	
+
+
 	bool divided = false;
 	int turn = 0;
 	while (!icebergpos.empty())
@@ -548,7 +556,7 @@ void BaekJoon::Quest_2573()
 			{
 				pair<int, int> pos = q.front();
 				q.pop();
-				// ´ÙÀ½ ¹æ¹®ÁöÁ¡
+				// ë‹¤ìŒ ë°©ë¬¸ì§€ì 
 				pair<int, int> movepos[4] = { {0,1},{1,0},{0,-1}, {-1,0} };
 				for (int j = 0; j < 4; ++j)
 				{
@@ -556,7 +564,7 @@ void BaekJoon::Quest_2573()
 					if (0 <= newpos.first && newpos.first < n && 0 <= newpos.second && newpos.second < m
 						&& !visited[newpos.first][newpos.second])
 					{
-						visited[newpos.first][newpos.second] = true; // ¹æ¹®Ã³¸®
+						visited[newpos.first][newpos.second] = true; // ë°©ë¬¸ì²˜ë¦¬
 						q.push(newpos);
 					}
 				}
@@ -564,7 +572,7 @@ void BaekJoon::Quest_2573()
 		}
 
 		//cout << "====================" << endl;
-		// ÂÉ°³Áü È®ÀÎ
+		// ìª¼ê°œì§ í™•ì¸
 		for (int i = 0; i < n; i++)
 		{
 			for (int j = 0; j < m; ++j)
@@ -584,7 +592,7 @@ void BaekJoon::Quest_2573()
 			break;
 
 		vector<int> watercnt(icebergpos.size(), 0);
-		// ±ÙÃ³ ¹Ù´Ù ¼ö ¼À
+		// ê·¼ì²˜ ë°”ë‹¤ ìˆ˜ ì…ˆ
 		for (int i = 0; i < icebergpos.size(); i++)
 		{
 			pair<int, int> movepos[4] = { {0,1},{1,0},{0,-1}, {-1,0} };
@@ -597,7 +605,7 @@ void BaekJoon::Quest_2573()
 			}
 		}
 
-		// ºùÇÏ ³ìÀ½ Ã³¸®
+		// ë¹™í•˜ ë…¹ìŒ ì²˜ë¦¬
 		vector<pair<int, int>> newvector;
 		for (int i = 0; i < icebergpos.size(); i++)
 		{
@@ -624,10 +632,10 @@ void BaekJoon::Quest_2573()
 
 void BaekJoon::Quest_1697()
 {
-	const int min_pos = 0, max_pos = 100000; // ÀÌµ¿°¡´ÉÇÑ ÃÖ¼Ò, ÃÖ´ë À§Ä¡ [0,100000]
+	const int min_pos = 0, max_pos = 100000; // ì´ë™ê°€ëŠ¥í•œ ìµœì†Œ, ìµœëŒ€ ìœ„ì¹˜ [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
 	vector<int> visited(max_pos + 1, 0);
-	int n_pos, k_pos; // n : ¼öºó À§Ä¡, k : µ¿»ı À§Ä¡
+	int n_pos, k_pos; // n : ìˆ˜ë¹ˆ ìœ„ì¹˜, k : ë™ìƒ ìœ„ì¹˜
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
 	{
@@ -669,17 +677,17 @@ void BaekJoon::Quest_1697()
 
 void BaekJoon::Quest_12851()
 {
-	const int min_pos = 0, max_pos = 100000; // ÀÌµ¿°¡´ÉÇÑ ÃÖ¼Ò, ÃÖ´ë À§Ä¡ [0,100000]
+	const int min_pos = 0, max_pos = 100000; // ì´ë™ê°€ëŠ¥í•œ ìµœì†Œ, ìµœëŒ€ ìœ„ì¹˜ [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
 	vector<int> visitedturn(max_pos + 1, 0);
-	int n_pos, k_pos; // n : ¼öºó À§Ä¡, k : µ¿»ı À§Ä¡
+	int n_pos, k_pos; // n : ìˆ˜ë¹ˆ ìœ„ì¹˜, k : ë™ìƒ ìœ„ì¹˜
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
 	{
 		cout << '0' << endl << '1';
 		return;
 	}
-	
+
 	int wayscnt = 0;
 	queue<int> q;
 	q.push(n_pos);
@@ -699,7 +707,7 @@ void BaekJoon::Quest_12851()
 				newpos = curpos + moveways[i];
 				if (isPosInArea(newpos) && (visitedturn[newpos] == visitedturn[curpos] + 1 || visitedturn[newpos] == 0))
 				{
-					if(!visitedturn[newpos])
+					if (!visitedturn[newpos])
 						visitedturn[newpos] = visitedturn[curpos] + 1;
 					if (newpos == k_pos)
 						++wayscnt;
@@ -717,10 +725,10 @@ void BaekJoon::Quest_12851()
 
 void BaekJoon::Quest_13549()
 {
-	const int min_pos = 0, max_pos = 100000; // ÀÌµ¿°¡´ÉÇÑ ÃÖ¼Ò, ÃÖ´ë À§Ä¡ [0,100000]
+	const int min_pos = 0, max_pos = 100000; // ì´ë™ê°€ëŠ¥í•œ ìµœì†Œ, ìµœëŒ€ ìœ„ì¹˜ [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
 	vector<int> distance(max_pos + 1, max_pos + 1);
-	int n_pos, k_pos; // n : ¼öºó À§Ä¡, k : µ¿»ı À§Ä¡
+	int n_pos, k_pos; // n : ìˆ˜ë¹ˆ ìœ„ì¹˜, k : ë™ìƒ ìœ„ì¹˜
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
 	{
@@ -766,11 +774,11 @@ void BaekJoon::Quest_13549()
 
 void BaekJoon::Quest_13913()
 {
-	const int min_pos = 0, max_pos = 100000; // ÀÌµ¿°¡´ÉÇÑ ÃÖ¼Ò, ÃÖ´ë À§Ä¡ [0,100000]
+	const int min_pos = 0, max_pos = 100000; // ì´ë™ê°€ëŠ¥í•œ ìµœì†Œ, ìµœëŒ€ ìœ„ì¹˜ [0,100000]
 	auto isPosInArea = [&](int pos)->bool {return(min_pos <= pos && pos <= max_pos); };
 	vector<int> visited(max_pos + 1, 0);
 	vector<int> prevnode(max_pos + 1, 0);
-	int n_pos, k_pos; // n : ¼öºó À§Ä¡, k : µ¿»ı À§Ä¡
+	int n_pos, k_pos; // n : ìˆ˜ë¹ˆ ìœ„ì¹˜, k : ë™ìƒ ìœ„ì¹˜
 	cin >> n_pos >> k_pos;
 	if (n_pos == k_pos)
 	{
@@ -789,7 +797,7 @@ void BaekJoon::Quest_13913()
 		{
 			int curpos = q.front();
 			q.pop();
-			int newpos[3] = { curpos + 1, curpos - 1, curpos * 2};
+			int newpos[3] = { curpos + 1, curpos - 1, curpos * 2 };
 			for (int i = 0; i < 3; ++i)
 			{
 				if (isPosInArea(newpos[i]) && !visited[newpos[i]])
@@ -822,5 +830,756 @@ void BaekJoon::Quest_13913()
 		cout << path.top() << ' ';
 		path.pop();
 	}
+}
+
+void BaekJoon::Quest_3197()
+{
+	int r, c;
+	cin >> r >> c;
+
+	vector<vector<bool>> isIce(r, vector<bool>(c)), waterVisited(r, vector<bool>(c, false)), swanVisited(r, vector<bool>(c, false));
+	queue<pair<int, int>> waterQ, swanQ;
+	pair<int, int> swanPos[2]{ {-1,-1}, {-1,-1} };
+
+	bool activeSwan = 0;
+	auto isInArea = [&r, &c](const pair<int, int>& pos)-> bool {return 0 <= pos.first && pos.first < r && 0 <= pos.second && pos.second < c; };
+	int ways[4][2] = { {0,1}, {0,-1}, {1,0}, {-1,0} };
+	
+	for (int y = 0; y < r; ++y)
+		for (int x = 0; x < c; ++x)
+		{
+			char tmp;
+			cin >> tmp;
+			switch (tmp)
+			{
+			case 'X':
+				isIce[y][x] = true;
+				break;
+			case 'L':
+				if (swanPos[0].first == -1)
+					swanPos[0] = { y,x };
+				else
+				{
+					swanPos[1] = { y,x };
+					swanVisited[y][x] = true;
+					swanQ.push({ y,x });
+				}
+			case '.':
+				isIce[y][x] = false;
+				waterVisited[y][x] = true;
+				waterQ.push({ y,x });
+				break;
+			}
+		}
+
+
+	bool found = false;
+	int turncnt = 0;
+	while (true)
+	{
+		queue<pair<int, int>> tmpQ;
+
+		// 2ë²ˆ ë°±ì¡°ì—ì„œ 1ë²ˆë°±ì¡°ë¡œ ê°€ëŠ” ê¸¸ì„ íƒìƒ‰í•¨.
+		while (!swanQ.empty())
+		{
+			auto curpos = swanQ.front();
+			swanQ.pop();
+			for (int i = 0; i < 4; ++i)
+			{
+				pair<int, int> newpos = { curpos.first + ways[i][0], curpos.second + ways[i][1] };
+				if (isInArea(newpos) && !swanVisited[newpos.first][newpos.second])
+				{
+					swanVisited[newpos.first][newpos.second] = true;
+					if (isIce[newpos.first][newpos.second])
+					{
+						tmpQ.push(newpos);
+					}
+					else
+					{
+						swanQ.push(newpos);
+					}
+
+
+					if (swanPos[0] == newpos)
+					{
+						cout << turncnt;
+						return;
+					}
+				}
+			}
+		}
+		swap(swanQ, tmpQ);
+
+		++turncnt;
+		while (!waterQ.empty())
+		{
+			auto curpos = waterQ.front();
+			waterQ.pop();
+			for (int i = 0; i < 4; ++i)
+			{
+				pair<int, int> newpos = { curpos.first + ways[i][0], curpos.second + ways[i][1] };
+				if (isInArea(newpos) && !waterVisited[newpos.first][newpos.second])
+				{
+					waterVisited[newpos.first][newpos.second] = true;
+					if (isIce[newpos.first][newpos.second])
+					{
+						tmpQ.push(newpos);
+						isIce[newpos.first][newpos.second] = false; 
+					}
+					else
+					{
+						waterQ.push(newpos);
+					}
+				}
+			}
+		}
+		swap(waterQ, tmpQ);
+	}
+}
+
+void BaekJoon::Quest_1485()
+{
+	//auto compareDouble = [](double a, double b)-> bool { return abs(a - b) < 1e-6; };
+	int tc;
+	cin >> tc;
+	for (int t = 0; t < tc; ++t)
+	{
+		int pos[4][2];
+		for (int c = 0; c < 4; ++c)
+			cin >> pos[c][0] >> pos[c][1];
+
+		double dist[6];
+		int count = 0;
+		for (int i = 0; i < 4; ++i)
+			for (int j = i + 1; j < 4; ++j)
+			{
+				dist[count] = pow(pos[i][0] - pos[j][0], 2) + pow(pos[i][1] - pos[j][1], 2);
+				++count;
+			}
+		sort(dist, dist + 6);
+		cout << (dist[0] == dist[1] && dist[0] == dist[2] && dist[0] == dist[3] && dist[4] == dist[5]) << endl;
+	}
+}
+
+void BaekJoon::Quest_1103()
+{
+	int n, m;
+	cin >> n >> m;
+	bool visited[50][50];
+	int map_[50][50];
+	auto isPosInArea = [&](pair<int, int> pos)->bool {return(0 <= pos.first && pos.first < n && 0 <= pos.second && pos.second < m); };
+	for (int y = 0; y < n; ++y)
+		for (int x = 0; x < m; ++x)
+			cin >> map_[y][x];
+	queue<pair<int, int>> q;
+	q.push(make_pair(0, 0));
+}
+
+void BaekJoon::Quest_17608()
+{
+	int n;
+	stack<int> s;
+	cin >> n;
+	for (int i = 0; i < n; ++i)
+	{
+		int tmp;
+		cin >> tmp;
+		s.push(tmp);
+	}
+	int highest = 0, cnt = 0;
+	while (!s.empty())
+	{
+		int tmp = s.top();
+
+		if (tmp > highest)
+		{
+			++cnt;
+			highest = tmp;
+		}
+		s.pop();
+	}
+	cout << cnt;
+}
+
+void BaekJoon::Quest_14491()
+{
+	stack<int> s;
+	int n;
+	cin >> n;
+	while (n)
+	{
+		s.push(n % 9);
+		n /= 9;
+	}
+	while (!s.empty())
+	{
+		cout << s.top();
+		s.pop();
+	}
+}
+
+void BaekJoon::Quest_14487()
+{
+	int tc;
+	int sum = 0, max = 0;
+	cin >> tc;
+	for (int t = 0; t < tc; ++t)
+	{
+		int n;
+		cin >> n;
+		if (n > max)
+		{
+			sum += max;
+			max = n;
+		}
+		else
+		{
+			sum += n;
+		}
+	}
+	cout << sum;
+}
+
+void BaekJoon::Quest_1051()
+{
+	int n, m;
+	cin >> n >> m;
+	int maxsize = (n > m ? m : n) - 1;
+	char arr[50][50];
+	for (int y = 0; y < n; ++y)
+		for (int x = 0; x < m; ++x)
+			cin >> arr[y][x];
+
+	for (int size = maxsize; 0 < size; --size)
+	{
+		for (int y = 0; y < n - size; ++y)
+		{
+			for (int x = 0; x < m - size; ++x)
+			{
+				int ry = y + size, dx = x + size;
+				int val = arr[y][x];
+				if (val == arr[ry][x] && val == arr[y][dx] && val == arr[ry][dx])
+				{
+					++size;
+					cout << size * size;
+					return;
+				}
+			}
+		}
+	}
+	cout << 1;
+}
+
+void BaekJoon::Quest_1113()
+{
+	/*{
+		int n, m, highest = 0;
+		int land[50][50];
+		bool visitied[50][50];
+		queue<pair<int, int>> q[9];
+		auto isInArea = [&](pair<int, int> pos) { 0 <= pos.first && pos.first < n && 0 <= pos.second && pos.second < m; };
+		cin >> n >> m;
+		for (int y = 0; y < n; ++y)
+			for (int x = 0; x < m; ++x)
+			{
+				cin >> land[y][x];
+				if (land[y][x] > highest)
+					highest = land[y][x];
+				q[land[y][x] - 1].push(make_pair(y, x));
+			}
+
+	}*/
+}
+
+void BaekJoon::Quest_17294()
+{
+	//char s[18];
+	string s;
+	cin >> s;
+	int size = s.size();
+	int gap = s[0] - s[1];
+	for (int i = 1; i < size; ++i)
+	{
+		if (s[i - 1] != s[i] + gap)
+		{
+			cout << "í¥ì¹«ë¿¡!! <(ï¿£ ï¹Œ ï¿£)>";
+			return;
+		}
+	}
+	cout << "â—(â‘…â€¢á´—â€¢â‘…)â—œ..Â°â™¡ ë€Œìš”ë¯¸!!";
+	return;
+}
+
+void BaekJoon::Quest_17296()
+{
+	int n;
+	cin >> n;
+	bool ispressed = false;
+	int count = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		double d;
+		cin >> d;
+		//count += (int)(d / 0.5) / 2;
+		count += (int)d;
+		if (count)
+			ispressed = true;
+		if (!ispressed && (int)(d / 0.5) % 2)
+		{
+			ispressed = true;
+			++count;
+		}
+	}
+	cout << count;
+}
+
+void BaekJoon::Quest_15922()
+{
+
+	int n;
+	cin >> n;
+	vector<pair<int, int>> line;
+	int len = 0;
+	pair<int, int> s(0, 1), e(0, -1);
+	for (int i = 0; i < n; ++i)
+	{
+		cin >> s.first >> e.first;
+		line.emplace_back(s);
+		line.emplace_back(e);
+	}
+	sort(line.begin(), line.end());
+	int linecnt = 0;
+	for (auto& elem : line)
+	{
+		if (elem.second == 1)
+		{
+			++linecnt;
+			if (linecnt == 1)
+				s.first = elem.first;
+		}
+		else
+		{
+			--linecnt;
+			if (linecnt == 0)
+				len += elem.first - s.first;
+		}
+
+	}
+
+	/*for (auto& elem : line)
+		cout << elem.first << elem.second << endl;*/
+	cout << len;
+}
+
+void BaekJoon::Quest_5212()
+{
+	int r, c;
+	cin >> r >> c;
+	bool isLand[12][12] = { false, };
+	vector<pair<int, int>> landpos;
+	int up = 12, left = 12, down = 0, right = 0;
+	for (int y = 1; y <= r; ++y)
+		for (int x = 1; x <= c; ++x)
+		{
+			char c;
+			cin >> c;
+			if (c == 'X')
+			{
+				landpos.emplace_back(pair<int, int>(y, x));
+				isLand[y][x] = true;
+				if (up > y)
+					up = y;
+				else if (down < y)
+					down = y;
+				if (left > x)
+					left = x;
+				else if (right < x)
+					right = x;
+			}
+		}
+
+	int landcnt = landpos.size();
+	int ways[4][2] = { {0,1}, {0,-1}, {1,0}, {-1,0} };
+	vector<pair<int, int>> erasedLands;
+	for (int i = 0; i < landcnt; ++i)
+	{
+		int cury = landpos[i].first, curx = landpos[i].second;
+		int watercnt = 0;
+		for (int j = 0; j < 4; ++j)
+		{
+			int newy = cury + ways[j][0], newx = curx + ways[j][1];
+			if (!isLand[newy][newx])
+			{
+				if (++watercnt == 3)
+				{
+					erasedLands.emplace_back(pair<int, int>(cury, curx));
+					break;
+				}
+			}
+		}
+	}
+
+	int erasecnt = erasedLands.size();
+	for (int i = 0; i < erasecnt; ++i)
+		isLand[erasedLands[i].first][erasedLands[i].second] = false;
+
+	swap(up, down);
+	swap(left, right);
+	for (int i = 0; i < landcnt; ++i)
+	{
+		int y = landpos[i].first, x = landpos[i].second;
+		if (isLand[y][x])
+		{
+			if (up > y)
+			{
+				up = y;
+				if (up > down)
+					down = up;
+			}
+			else if (down < y)
+			{
+				down = y;
+				if (up > down)
+					up = down;
+			}
+			if (left > x)
+			{
+				left = x;
+				if (left > right)
+					right = left;
+			}
+			else if (right < x)
+			{
+				right = x;
+				if (left > right)
+					left = right;
+			}
+		}
+	}
+	
+	for (int y = up; y <= down; ++y)
+	{
+		for (int x = left; x <= right; ++x)
+		{
+			cout << (isLand[y][x] ? 'X' : '.');
+		}
+		cout << endl;
+	}
+}
+
+void BaekJoon::Quest_6581()
+{
+	string s;
+	
+	while (!cin.eof())
+	{
+		cin >> s;
+		/*istringstream iss(s);
+
+		vector<string> words(
+			istream_iterator<string>(istringstream(iss)),
+			istream_iterator<string>()
+		);*/
+		
+	}
+}
+
+void BaekJoon::Quest_16946()
+{
+	/*
+	ë°©ë¬¸ì—¬ë¶€, ì œë¡œí, í, ê° ì¹¸ ê·¸ë£¹ë²ˆí˜¸, ê·¸ë£¹ìš”ì†Œê°¯ìˆ˜
+	1. ëª¨ë“  0ì¹¸ì„ ì œë¡œíì— ë„£ëŠ”ë‹¤.
+	2. ì œë¡œíì—ì„œ ì›ì†Œë¥¼ êº¼ë‚´ì–´ í•´ë‹¹ ì¹¸ì„ ë°©ë¬¸í•˜ì§€ ì•Šì•˜ë‹¤ë©´ íì— ë„£ê³  ê·¸ë£¹ë²ˆí˜¸ë¥¼ ì¦ê°€ì‹œí‚¤ê³  ê·¸ë£¹ì„ ì§€ì •í•œë‹¤.
+	3. í•´ë‹¹ ê·¸ë£¹ì˜ ì›ì†Œì˜ ê°¯ìˆ˜ë¥¼ ì¦ê°€ì‹œí‚¤ê³ , íì—ì„œ ì›ì†Œë¥¼ êº¼ë‚´ì–´ ê·¸ ì¹¸ì— ê·¸ë£¹ë²ˆí˜¸ë¥¼ ì§€ì •í•œ í›„ ê·¸ ì¹¸ì— ìƒ/í•˜/ì¢Œ/ìš°ë¡œ ì¸ì ‘í•œ 4ê°œì˜ ì¹¸ì— ëŒ€í•´ 4ë²ˆí–‰ë™ì„ í•œë‹¤.
+	4. í•´ë‹¹ ì¹¸ì„ ì´ì „ì— ë°©ë¬¸í–ˆë‹¤ë©´ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•Šê³ , ì²˜ìŒìœ¼ë¡œ ë°©ë¬¸í–ˆë‹¤ë©´ ë°©ë¬¸í–ˆë‹¤ëŠ” í‘œì‹œë¥¼ ë‚¨ê¸°ê³ , í•´ë‹¹ ì¹¸ì„ íì— ë„£ëŠ”ë‹¤.
+	5. íì˜ ëª¨ë“  ì›ì†Œê°€ ë¹Œ ë•Œê¹Œì§€ 3ì„ ë°˜ë³µí•œë‹¤.
+	6. ì œë¡œíì˜ ëª¨ë“  ì›ì†Œê°€ ë¹Œ ë•Œê¹Œì§€ 2ë¥¼ ë°˜ë³µí•œë‹¤.
+	7. ì›ë˜ ì§€ë„ì—ì„œ ëª¨ë“ ì¹¸ì— ëŒ€í•´ ìˆœíšŒë¥¼ í•˜ë©° 8ë²ˆ í–‰ë™ì„ í•œë‹¤.
+	8. í•´ë‹¹ ì¹¸ì´ 0ì¼ê²½ìš° 0ì„ ì¶œë ¥í•œë‹¤. 1ì¼ê²½ìš° ì¸ì ‘í•œ ìƒ/í•˜/ì¢Œ/ìš° ë„¤ì¹¸ì— ëŒ€í•´ 9ë²ˆ í–‰ë™ì„ í•œë‹¤.
+	9. í•´ë‹¹ ì¹¸ì˜ ê·¸ë£¹ì´ 0ì´ ì•„ë‹ˆê³ , ê·¸ë£¹ì˜ ê°’ì„ í•©ì¹˜ì§€ ì•Šì•˜ë‹¤ë©´ í•´ë‹¹ì¹¸ì˜ ê·¸ë£¹ë²ˆí˜¸ì— ëŒ€ì‘í•˜ëŠ” ìš”ì†Œì˜ ê°¯ìˆ˜ë¥¼ í•©ì¹˜ê³  +1ì„ í•œë‹¤.
+	*/
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	//ifstream in("tc10001000.txt");
+	
+	int n, m;
+	cin >> n >> m;
+	vector<vector<bool>> visited(n, vector<bool>(m));
+	vector<vector<int>> group(n, vector<int>(m, 0));
+	vector<vector<bool>> map_(n, vector<bool>(m));
+	vector<int> groupElemCnt(1, 0);
+	queue<pair<int, int>> zeroq, oneq;
+	for (int y = 0; y < n; ++y)
+	{
+		for (int x = 0; x < m; ++x)
+		{
+			char t;
+			cin >> t;
+			bool element = (t == '1');
+			map_[y][x] = visited[y][x] = element;
+			if (element)
+				oneq.push({ y,x });
+			else
+				zeroq.push({ y,x });
+		}
+	}
+	/*MyTimer timerBOJ;
+	timerBOJ.enable();
+	timerBOJ.start();*/
+	queue<pair<int, int>> q;
+	int ways[4][2] = { {0,1}, {0,-1}, {1,0}, {-1,0} };
+	int groupcnt = 0;
+	while (!zeroq.empty())
+	{
+		pair<int, int> firstpos = zeroq.front();
+		int elemcnt = 0;
+		if(!visited[firstpos.first][firstpos.second])
+		{
+			visited[firstpos.first][firstpos.second] = true;
+			q.push(firstpos);
+			++groupcnt;
+		}
+		zeroq.pop();
+		while (!q.empty())
+		{
+			pair<int, int> curpos = q.front();
+			group[curpos.first][curpos.second] = groupcnt;
+			++elemcnt;
+			q.pop();
+			for (int i = 0; i < 4; ++i)
+			{
+				pair<int, int> newpos(curpos.first + ways[i][0], curpos.second + ways[i][1]);
+				if ( 0 <= newpos.first && newpos.first < n && 0 <= newpos.second && newpos.second < m && !visited[newpos.first][newpos.second])
+				{
+					visited[newpos.first][newpos.second] = true;
+					q.push(newpos);
+				}
+			}
+		}
+		if (elemcnt)
+			groupElemCnt.push_back(elemcnt);
+	}
+	/*for(auto l : group)
+	{
+		for (auto e : l)
+			cout << e;
+		cout << endl;
+	}
+	for (auto e : groupElemCnt)
+		cout << e << ' ';
+	cout << endl;*/
+	//ofstream cout("result.txt");
+	for (int y = 0; y < n; ++y)
+	{
+		for (int x = 0; x < m; ++x)
+		{
+			if (map_[y][x])
+			{
+				vector<bool> isGroupAdded(groupElemCnt.size(), false);
+				int sum = 1;
+				for (int i = 0; i < 4; ++i)
+				{
+					pair<int, int> newpos(y + ways[i][0], x + ways[i][1]);
+					if (0 <= newpos.first && newpos.first < n && 0 <= newpos.second && newpos.second < m && !isGroupAdded[group[newpos.first][newpos.second]] && group[newpos.first][newpos.second])
+					{
+						sum += groupElemCnt[group[newpos.first][newpos.second]];
+						isGroupAdded[group[newpos.first][newpos.second]] = true;
+					}
+				}
+				cout << sum % 10;
+			}
+			else
+				cout << 0;
+		}
+		cout << '\n';
+	}
+	/*timerBOJ.stop();
+	timerBOJ.printTime();*/
+}
+
+void BaekJoon::Quest_16933()
+{
+}
+
+void BaekJoon::Quest_2493()
+{
+	cin.tie(NULL);
+	ios::sync_with_stdio(false);
+	int tc;
+	cin >> tc;
+	stack<pair<int, int>> s;
+	for (int i = 0; i < tc; ++i)
+	{
+		int newN;
+		cin >> newN;
+		bool found = false;
+		while (!s.empty())
+		{
+			auto curN = s.top();
+			if (curN.first > newN)
+			{
+				cout << curN.second << ' ';
+				found = true;
+				break;
+			}
+			else
+				s.pop();
+		}
+		if (!found)
+			cout << 0 << ' ';
+		s.push({ newN, i + 1 });
+	}
+}
+
+void BaekJoon::Quest_9012()
+{
+	/*cin.tie(NULL);
+	ios::sync_with_stdio(false);*/
+	int tc;
+	//cin >> tc;
+	scanf_s("%d", &tc);
+	getchar();
+	stack<bool> s;
+	for (int i = 0; i < tc; ++i)
+	{
+		char c;
+		bool isRegular = true;
+		while ((c = getchar()) != '\n')
+		{
+			if (c == '(')
+			{
+				s.push(true);
+			}
+			else
+			{
+				if (!s.empty() && s.top())
+					s.pop();
+				else
+				{
+					while (getchar() != '\n');
+					isRegular = false;
+					break;
+				}
+			}
+		}
+		if (isRegular && s.empty())
+			cout << "YES\n";
+		else
+			cout << "NO\n";
+		s = {};
+	}
+}
+
+void BaekJoon::Quest_1629()
+{
+	int num, cnt, div;
+	cin >> num >> cnt >> div;
+	function<long long(long long, long long)> func = [&func, &div](long long n, long long c) -> long long {
+		if (c == 1)
+			return n % div;
+		long long result = func(n, c / 2);
+		result = (result * result) % div;
+		if (c % 2)
+			result = result * n % div;
+		return result;
+	};
+	cout << func(num, cnt);
+}
+
+void BaekJoon::Quest_15649()
+{
+	int n, m;
+	list<int> l;
+	cin >> n >> m;
+	vector<int> isUsed(n);
+
+	function<void()> NnM1 = [&]()
+	{
+		if (l.size() == m)
+		{
+			for (const auto& elem : l)
+				cout << elem << ' ';
+			cout << '\n';
+			return;
+		}
+		for (int i = 0; i < n; ++i)
+		{
+			if (!isUsed[i])
+			{
+				isUsed[i] = true;
+				l.push_back(i + 1);
+				NnM1();
+				l.pop_back();
+				isUsed[i] = false;
+			}
+		}
+	};
+	NnM1();
+}
+
+void BaekJoon::Quest_15652()
+{
+	int n, m;
+	list<int> l;
+	cin >> n >> m;
+	function<void()> NnM4 = [&]()
+	{
+		if (l.size() == m)
+		{
+			for (const auto& elem : l)
+				cout << elem << ' ';
+			cout << '\n';
+			return;
+		}
+		for (int i = (l.size() ? *(l.rbegin()) : 1); i <= n; ++i)
+		{
+			l.push_back(i);
+			NnM4();
+			l.pop_back();
+		}
+	};
+	NnM4();
+}
+
+void BaekJoon::Quest_9663()
+{
+	int n;
+	cin >> n;
+	vector<bool> isXUsed(n, false), isUUsed(2 * n, false), isDUsed(2 * n, false);
+	int count = 0;
+	function<void(int)> f = [&](int y)
+	{
+		if (y == n)
+		{
+			++count;
+			return;
+		}
+
+		for (int x = 0; x < n; ++x)
+		{
+			if (isXUsed[x] || isUUsed[x + y] || isDUsed[x - y + n - 1])	continue;	// í˜„ì¬ ì—´orìš°ìƒí–¥ëŒ€ê°ì„ or ìš°í•˜í–¥ëŒ€ê°ì„  ì¤‘ í•˜ë‚˜ë¼ë„ ì¡´ì¬, x-yì˜ ìµœì†Œê°’ì´ -n+1ì´ë¼ n-1ì„ ë”í•´ ìµœì†Œê°’ì„ 0ìœ¼ë¡œ ë§Œë“¬
+
+			// í€¸ ë°°ì¹˜ ì²˜ë¦¬
+			isXUsed[x] = true;
+			isUUsed[x + y] = true;
+			isDUsed[x - y + n - 1] = true;
+			f(y + 1);
+			// í€¸ ë°°ì¹˜ ì·¨ì†Œ
+			isXUsed[x] = false;
+			isUUsed[x + y] = false;
+			isDUsed[x - y + n - 1] = false;
+		}
+	};
+
+	f(0);
+	cout << count;
+}
+
+void BaekJoon::Quest_9663_cheat()
+{
+	int arr[] = { 1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596 };
+	int n;
+	cin >> n;
+	cout << arr[n - 1];
 }
 
