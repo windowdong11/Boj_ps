@@ -1583,3 +1583,71 @@ void BaekJoon::Quest_9663_cheat()
 	cout << arr[n - 1];
 }
 
+void BaekJoon::Quest_1182_1()
+{
+	/*
+	1의 갯수를 변경시켜 next_permutation으로 해당 1의 갯수에 대한 모든 순열을 만들어 해결하는 방식
+	0001(1이 1개)
+	0010
+	0100
+	1000
+	0011(1이 2개)
+	0101
+	0110
+	...
+	*/
+	int n, s;
+	int count = 0;
+	cin >> n >> s;
+	vector<int> val(n);
+	vector<bool> sel(n);
+	for (int i = 0; i < n; ++i)
+		cin >> val[i];
+	sort(val.begin(), val.end());
+	for (int i = 0; i < n; ++i)
+	{
+		sel[n - (i + 1)] = true;
+		do
+		{
+			int sum = 0;
+			for (int k = 0; k < n; ++k)
+				if (sel[k]) sum += val[k];
+			if (sum == s)
+				++count;
+		} while (next_permutation(sel.begin(), sel.end()));
+	}
+	cout << count;
+}
+
+void BaekJoon::Quest_1182_2()
+{
+	/*
+	0001
+	0010
+	0011
+	0101
+	...
+	이러한 형식으로 증가하는 이진수의 형태를 이용해 모든 순열을 만들어 푸는 방식
+	*/
+	int n, s;
+	int count = 0;
+	cin >> n >> s;
+	vector<int> val(n);
+	for (int i = 0; i < n; ++i)
+		cin >> val[i];
+	const int end = 1 << n;
+	for (int i = 1; i < end; ++i)
+	{
+		int tmp = i;
+		int sum = 0;
+		for (int k = 0; k < n; ++k)
+		{
+			if (tmp % 2) sum += val[k];
+			tmp /= 2;
+		}
+		if (sum == s)
+			++count;
+	}
+	cout << count;
+}
+
