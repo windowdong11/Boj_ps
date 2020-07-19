@@ -1651,3 +1651,124 @@ void BaekJoon::Quest_1182_2()
 	cout << count;
 }
 
+void BaekJoon::Quest_1463_1()
+{
+	int x;
+	cin >> x;
+	if (x == 1)
+	{
+		cout << 0;
+		return;
+	}
+	vector<int> mem(x + 1, 0);
+	queue<int> p;
+	p.push(x);
+	while (!mem[1]) {
+		int pos = p.front();
+		p.pop();
+		if (!(pos % 3))
+		{
+			if (!mem[pos / 3])
+			{
+				p.push(pos / 3);
+				mem[pos / 3] = mem[pos] + 1;
+			}
+		}
+		if (!(pos & 1))
+		{
+			if (!mem[pos / 2])
+			{
+				p.push(pos / 2);
+				mem[pos / 2] = mem[pos] + 1;
+			}
+		}
+		if (!mem[pos - 1])
+		{
+			p.push(pos - 1);
+			mem[pos - 1] = mem[pos] + 1;
+		}
+	}
+	cout << mem[1];
+}
+
+void BaekJoon::Quest_1463_2()
+{
+}
+
+void BaekJoon::Quest_2579()
+{
+	int n;
+	cin >> n;
+	int maxval[300][2];
+	int tmp;
+	cin >> tmp;
+	if (n == 1)
+	{
+		cout << tmp;
+		return;
+	}
+	maxval[0][0] = tmp;
+	maxval[0][1] = 0;
+	cin >> tmp;
+	maxval[1][0] = tmp;
+	maxval[1][1] = maxval[0][0] + tmp;
+	for (int i = 2; i < n; ++i)
+	{
+		cin >> tmp;
+		maxval[i][0] = max(maxval[i - 2][0], maxval[i - 2][1]) + tmp;
+		maxval[i][1] = maxval[i - 1][0] + tmp;
+	}
+	cout << max(maxval[n - 1][0], maxval[n - 1][1]);
+}
+
+void BaekJoon::Quest_1149()
+{
+	int n;
+	cin >> n;
+	int rgbval[1000][3];
+	int rgbcase[3][3] = { {0, 1, 2}, {1, 2, 0}, {2, 0, 1} };
+	for (int j = 0; j < 3; ++j)
+		cin >> rgbval[0][j];
+	for (int i = 1; i < n; ++i)
+		for (int j = 0; j < 3; ++j)
+		{
+			int tmp;
+			cin >> tmp;
+			rgbval[i][rgbcase[j][0]] = min(rgbval[i - 1][rgbcase[j][1]], rgbval[i - 1][rgbcase[j][2]]) + tmp;
+		}
+	cout << min({ rgbval[n - 1][0], rgbval[n - 1][1], rgbval[n - 1][2] });
+}
+
+void BaekJoon::Quest_11726()
+{
+	int n;
+	cin >> n;
+	int arr[1000]; // arr[i] = 2 * (i+1) 만큼의 타일을 채우는 경우의 수
+	arr[0] = 1;
+	arr[1] = 2;
+	for (int i = 2; i < n; ++i)
+		arr[i] = (arr[i - 1] + arr[i - 2]) % 10007;
+	cout << arr[n - 1];
+}
+
+void BaekJoon::Quest_1912()
+{
+	int n;
+	cin >> n;
+	int mem[100000];
+	cin >> mem[0];
+	int max = mem[0];
+	for (int i = 1; i < n; ++i)
+	{
+		int tmp;
+		cin >> tmp;
+		if (mem[i - 1] > 0)
+			mem[i] = mem[i - 1] + tmp;
+		else
+			mem[i] = tmp;
+		if (mem[i] > max)
+			max = mem[i];
+	}
+	cout << max;
+}
+

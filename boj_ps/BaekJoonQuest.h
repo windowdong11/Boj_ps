@@ -48,4 +48,10 @@ namespace BaekJoon
 	void Quest_9663_cheat();
 	void Quest_1182_1();
 	void Quest_1182_2();
+	void Quest_1463_1();
+	void Quest_1463_2();
+	void Quest_2579();
+	void Quest_1149();
+	void Quest_11726();// 다시 풀어보길
+	void Quest_1912();// 다시 풀어보길
 }
