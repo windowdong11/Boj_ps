@@ -28,12 +28,14 @@ int main() {
 		for (int x = 0; x < w; ++w)
 		{
 			if (v[y][x] == 'J') {
+				board[y][x] = '.';
 				tmpuserq.push({x, y});
+				v[y][x] = 1;
+			}
+			else if (v[y][x] == 'F') {
+				tmpfireq.push({x, y});
 				v[y][x] = -1;
 			}
-			else if (v[y][x] == 'F')
-				tmpfireq.push({x, y});
-				v[y][x] = 1;
 		}
 	}
 	int dx[] = {0, 1, 0, -1};
@@ -41,29 +43,32 @@ int main() {
 	while (!tmpuserq.empty()) {
 		swap(userq, tmpuserq);
 		while (!userq.empty()) {
-			int cost, cx, cy;
+			int ncost, cx, cy;
 			tie(cx, cy) = userq.top();
 			userq.pop();
-			cost = v[cy][cx];
+			ncost = v[cy][cx] + 1;
 			for (int w = 0; w < 4; ++w) {
 				int nx = cx + dx[w], ny = cy + dy[w];
-				if (OOB(nx, ny, w, h) || board[ny][nx] == '#')
+				if (OOB(nx, ny, w, h)) {
+					cout << ncost - 1;
+					return 0;
+				}
+				if (board[ny][nx] != '.' || v[ny][nx] <= ncost)
 					continue;
-				v[cy][cx] += cost + 1;
-				userq.push({nx, ny});
+				v[ny][nx] = ncost;
+				tmpuserq.push({nx, ny});
 			}
 		}
 	}
 	while (!userq.empty()) {
-			int cost, cx, cy;
+			int ncost, cx, cy;
 			tie(cx, cy) = userq.top();
 			userq.pop();
-			cost = v[cy][cx];
 			for (int w = 0; w < 4; ++w) {
 				int nx = cx + dx[w], ny = cy + dy[w];
-				if (OOB(nx, ny, w, h) || board[ny][nx] == '#')
+				if (OOB(nx, ny, w, h) || board[ny][nx] != '.')
 					continue;
-				v[cy][cx] += cost - 1;
+				board[ny][nx] = 'F';
 				userq.push({nx, ny});
 			}
 		}
